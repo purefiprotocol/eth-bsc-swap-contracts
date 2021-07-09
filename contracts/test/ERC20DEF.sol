@@ -1,7 +1,7 @@
 
 // File: contracts/interface/IBEP20.sol
 
-pragma solidity 0.6.4;
+pragma solidity >=0.6.4;
 
 interface IBEP20 {
   /**
@@ -353,7 +353,7 @@ contract Ownable is Context {
 
 // File: contracts/test/ABCToken.sol
 
-pragma solidity 0.6.4;
+pragma solidity >=0.6.4;
 
 
 

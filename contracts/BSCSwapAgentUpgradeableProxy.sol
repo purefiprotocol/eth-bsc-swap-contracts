@@ -1,4 +1,4 @@
-pragma solidity ^0.6.0;
+pragma solidity ^0.6.12;
 
 import "openzeppelin-solidity/contracts/proxy/TransparentUpgradeableProxy.sol";
 
