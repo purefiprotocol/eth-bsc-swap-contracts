@@ -1,4 +1,4 @@
-pragma solidity 0.6.4;
+pragma solidity ^0.6.12;
 
 import "./interfaces/IERC20Query.sol";
 import "openzeppelin-solidity/contracts/proxy/Initializable.sol";
@@ -12,6 +12,7 @@ contract ETHSwapAgentImpl is Context, Initializable {
     mapping(address => bool) public registeredERC20;
     mapping(bytes32 => bool) public filledBSCTx;
     address payable public owner;
+    address public poolOperator;
     uint256 public swapFee;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -30,9 +31,18 @@ contract ETHSwapAgentImpl is Context, Initializable {
         _;
     }
 
+    /**
+     * @dev Throws if called by any account other than the pool operator.
+     */
+    modifier onlyOperator() {
+        require(poolOperator == msg.sender, "Sender is not pool operator");
+        _;
+    }
+
     function initialize(uint256 fee, address payable ownerAddr) public initializer {
         swapFee = fee;
         owner = ownerAddr;
+        poolOperator = ownerAddr;
     }
 
     modifier notContract() {
@@ -76,6 +86,10 @@ contract ETHSwapAgentImpl is Context, Initializable {
         swapFee = fee;
     }
 
+     function setPoolOperator(address _poolOperator) public onlyOwner {
+        poolOperator = _poolOperator;
+    }
+
     function registerSwapPairToBSC(address erc20Addr) external returns (bool) {
         require(!registeredERC20[erc20Addr], "already registered");
 
@@ -92,7 +106,7 @@ contract ETHSwapAgentImpl is Context, Initializable {
         return true;
     }
 
-    function fillBSC2ETHSwap(bytes32 bscTxHash, address erc20Addr, address toAddress, uint256 amount) onlyOwner external returns (bool) {
+    function fillBSC2ETHSwap(bytes32 bscTxHash, address erc20Addr, address toAddress, uint256 amount) onlyOperator external returns (bool) {
         require(!filledBSCTx[bscTxHash], "bsc tx filled already");
         require(registeredERC20[erc20Addr], "not registered token");
 

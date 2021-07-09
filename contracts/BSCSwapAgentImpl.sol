@@ -1,4 +1,4 @@
-pragma solidity 0.6.4;
+pragma solidity ^0.6.12;
 
 import "./interfaces/ISwap.sol";
 import "./bep20/BEP20UpgradeableProxy.sol";
@@ -17,6 +17,7 @@ contract  BSCSwapAgentImpl is Context, Initializable {
     mapping(bytes32 => bool) public filledETHTx;
 
     address payable public owner;
+    address public poolOperator;
     address public bep20ProxyAdmin;
     address public bep20Implementation;
     uint256 public swapFee;
@@ -37,18 +38,25 @@ contract  BSCSwapAgentImpl is Context, Initializable {
         _;
     }
 
+    /**
+     * @dev Throws if called by any account other than the pool operator.
+     */
+    modifier onlyOperator() {
+        require(poolOperator == msg.sender, "Sender is not pool operator");
+        _;
+    }
+
     modifier notContract() {
         require(!isContract(msg.sender), "contract is not allowed to swap");
         require(msg.sender == tx.origin, "no proxy contract is allowed");
        _;
     }
 
-
-
     function initialize(address bep20Impl, uint256 fee, address payable ownerAddr, address bep20ProxyAdminAddr) public initializer {
         bep20Implementation = bep20Impl;
         swapFee = fee;
         owner = ownerAddr;
+        poolOperator = ownerAddr;
         bep20ProxyAdmin = bep20ProxyAdminAddr;
     }
 
@@ -87,6 +95,10 @@ contract  BSCSwapAgentImpl is Context, Initializable {
         swapFee = fee;
     }
 
+    function setPoolOperator(address _poolOperator) public onlyOwner {
+        poolOperator = _poolOperator;
+    }
+
     /**
      * @dev createSwapPair
      */
@@ -107,7 +119,7 @@ contract  BSCSwapAgentImpl is Context, Initializable {
     /**
      * @dev fillETH2BSCSwap
      */
-    function fillETH2BSCSwap(bytes32 ethTxHash, address erc20Addr, address toAddress, uint256 amount) onlyOwner external returns (bool) {
+    function fillETH2BSCSwap(bytes32 ethTxHash, address erc20Addr, address toAddress, uint256 amount) onlyOperator external returns (bool) {
         require(!filledETHTx[ethTxHash], "eth tx filled already");
         address bscTokenAddr = swapMappingETH2BSC[erc20Addr];
         require(bscTokenAddr != address(0x0), "no swap pair for this token");
