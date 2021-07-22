@@ -2,6 +2,7 @@ pragma solidity ^0.6.12;
 
 import "../interfaces/IBEP20.sol";
 import "../interfaces/ISwap.sol";
+import "../interfaces/IBotProtector.sol";
 import "openzeppelin-solidity/contracts/GSN/Context.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/proxy/Initializable.sol";
@@ -15,6 +16,7 @@ contract BEP20TokenImplementation is Context, IBEP20, ISwap, Initializable {
     string private _name;
     string private _symbol;
     uint8 private _decimals;
+    address private botProtector;
 
     address private _owner;
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -42,6 +44,10 @@ contract BEP20TokenImplementation is Context, IBEP20, ISwap, Initializable {
         _decimals = decimals;
         _mintable = mintable;
         _mint(owner, amount);
+    }
+
+    function setBotProtector(address _botProtector) onlyOwner public{
+        botProtector = _botProtector;
     }
 
     /**
@@ -257,6 +263,9 @@ contract BEP20TokenImplementation is Context, IBEP20, ISwap, Initializable {
     function _transfer(address sender, address recipient, uint256 amount) internal {
         require(sender != address(0), "BEP20: transfer from the zero address");
         require(recipient != address(0), "BEP20: transfer to the zero address");
+        if(botProtector != address(0)){
+            require(!IBotProtector(botProtector).isPotentialBotTransfer(sender, recipient), "PureFiToken: Bot transaction debounced");
+        }
 
         _balances[sender] = _balances[sender].sub(amount, "BEP20: transfer amount exceeds balance");
         _balances[recipient] = _balances[recipient].add(amount);
@@ -330,4 +339,5 @@ contract BEP20TokenImplementation is Context, IBEP20, ISwap, Initializable {
         _burn(account, amount);
         _approve(account, _msgSender(), _allowances[account][_msgSender()].sub(amount, "BEP20: burn amount exceeds allowance"));
     }
+
 }
