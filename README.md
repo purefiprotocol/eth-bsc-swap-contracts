@@ -12,6 +12,7 @@
 
 1. Added bot protection to BEP20 token
 1. Introduced a separate Operator role for Swap contracts so that Owner is responsible for key admin settings only.
+1. updated compiller version to 0.6.12
 ## Security Report
 
 [here](SecurityAssessment.pdf)
