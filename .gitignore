@@ -4,3 +4,5 @@ build
 contracts/flattened/*.sol
 coverage
 coverage.json
+network_keys
+*log

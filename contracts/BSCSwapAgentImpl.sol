@@ -6,6 +6,7 @@ import './interfaces/IProxyInitialize.sol';
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "openzeppelin-solidity/contracts/proxy/Initializable.sol";
 import "openzeppelin-solidity/contracts/GSN/Context.sol";
+import "./interfaces/IBotProtactableToken.sol";
 
 contract  BSCSwapAgentImpl is Context, Initializable {
 
@@ -102,12 +103,13 @@ contract  BSCSwapAgentImpl is Context, Initializable {
     /**
      * @dev createSwapPair
      */
-    function createSwapPair(bytes32 ethTxHash, address erc20Addr, string calldata name, string calldata symbol, uint8 decimals) onlyOwner external returns (address) {
+    function createSwapPair(bytes32 ethTxHash, address erc20Addr, string calldata name, string calldata symbol, uint8 decimals, address botProtection) onlyOwner external returns (address) {
         require(swapMappingETH2BSC[erc20Addr] == address(0x0), "duplicated swap pair");
 
         BEP20UpgradeableProxy proxyToken = new BEP20UpgradeableProxy(bep20Implementation, bep20ProxyAdmin, "");
         IProxyInitialize token = IProxyInitialize(address(proxyToken));
         token.initialize(name, symbol, decimals, 0, true, address(this));
+        token.setBotProtector(botProtection);
 
         swapMappingETH2BSC[erc20Addr] = address(token);
         swapMappingBSC2ETH[address(token)] = erc20Addr;

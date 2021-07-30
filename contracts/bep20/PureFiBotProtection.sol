@@ -39,7 +39,7 @@ contract PureFiBotProtection is Context, Ownable, IBotProtectedV1Token, IBotProt
         _;
     }
 
-    constructor (address _operator, address _tokenProtected) public {
+    constructor(address _operator, address _tokenProtected) public {
         transferOwnership(_operator);
         botWhitelist[_operator] = true;
         tokenProtected = _tokenProtected;

@@ -1,5 +1,17 @@
-# ETH BSC Swap Contracts
+# PureFi ETH BSC Swap Contracts (forked)
 
+## Ethereum Mainnet
+
+1. ETHSwapAgentImpl: [0x0c7aC08bD7a2F747Af7F9f939954b3798c17C230](https://etherscan.io/address/0x0c7aC08bD7a2F747Af7F9f939954b3798c17C230)
+
+## Binance Smart Chain
+
+1. BSCSwapAgentImpl: [0xC4617166e3af9c90055eDF469a9F08215CF80b1D](https://bscscan.com/address/0xC4617166e3af9c90055eDF469a9F08215CF80b1D)
+
+## Code changes
+
+1. Added bot protection to BEP20 token
+1. Introduced a separate Operator role for Swap contracts so that Owner is responsible for key admin settings only.
 ## Security Report
 
 [here](SecurityAssessment.pdf)
