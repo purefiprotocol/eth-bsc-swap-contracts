@@ -2,11 +2,16 @@
 
 ## Ethereum Mainnet
 
-1. ETHSwapAgentImpl: [0x0c7aC08bD7a2F747Af7F9f939954b3798c17C230](https://etherscan.io/address/0x0c7aC08bD7a2F747Af7F9f939954b3798c17C230)
+1. BSC => ETHSwapAgentImpl: [0x0c7aC08bD7a2F747Af7F9f939954b3798c17C230](https://etherscan.io/address/0x0c7aC08bD7a2F747Af7F9f939954b3798c17C230)
+1. Polygon => ETHSwapAgentImpl: [0x21eb8c8695A37aC50f323df3df3b33Df542519A9](https://etherscan.io/address/0x21eb8c8695A37aC50f323df3df3b33Df542519A9)
 
 ## Binance Smart Chain
 
 1. BSCSwapAgentImpl: [0xC4617166e3af9c90055eDF469a9F08215CF80b1D](https://bscscan.com/address/0xC4617166e3af9c90055eDF469a9F08215CF80b1D)
+
+## Polygon
+
+1. BSCSwapAgentImpl: [0x21eb8c8695a37ac50f323df3df3b33df542519a9](https://polygonscan.com/address/0x21eb8c8695a37ac50f323df3df3b33df542519a9)
 
 ## Code changes
 
